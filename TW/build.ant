@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TW" default="junit" basedir=".">
+
+
+	<!-- source code path -->
+	<property name="src.path" value="src" />
+	<!-- compiled class path -->
+	<property name="build.path" value="build" />
+	<!-- junit source coude path -->
+	<property name="test.path" value="junit" />
+	<!-- lib包路径 -->
+	<property name="lib.path" value="lib" />
+	<!--unit test report-->
+	<property name="report.path" value="report" />
+	<!-- =================================================================== -->
+	<!-- set classpath -->
+	<!-- =================================================================== -->
+	<path id="compile.path">
+		<fileset dir="${lib.path}">
+			<include name="**/*.jar" />
+		</fileset>
+
+		<pathelement path="${build.path}" />
+	</path>
+
+	<!-- =================================================================== -->
+	<!-- clean class -->
+	<!-- =================================================================== -->
+	<target name="clean" description="clean">
+		<delete dir="${build.path}" />
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- compile -->
+	<!-- =================================================================== -->
+	<target name="compile" description="compile">
+		<mkdir dir="${build.path}" />
+		<mkdir dir="${report.path}" />
+		<javac srcdir="${src.path}" destdir="${build.path}" classpathref="compile.path" />
+		<javac srcdir="${test.path}" destdir="${build.path}" classpathref="compile.path" />
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- execute -->
+	<!-- =================================================================== -->
+	 <target name="junit" depends="compile">                
+	        <junit printsummary="true" fork="true">        
+	             <formatter type="xml" usefile="true"/>        
+	             <classpath refid="compile.path"/>        
+	            <batchtest fork="on" todir="${report.path}" haltonfailure="no">
+	                <fileset dir="${build.path}">
+	                    <include name="**/*Test.class"/>
+	                </fileset>
+	            </batchtest>                 
+	         </junit>
+	        
+	        
+	        <junitreport todir="${report.path}">
+	            <fileset dir="${report.path}">
+	                <include name="TEST-*.xml" />
+	            </fileset>
+	            <report format="frames" todir="${report.path}" />
+	        </junitreport>
+	 		<java classname="com.tw.interview.homework.App" classpathref="compile.path"/>  
+	     </target>
+	<target name="delete">
+		<delete dir="${report.path}" />
+	</target>
+</project>
